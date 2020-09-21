@@ -1,8 +1,11 @@
 #include "login.h"
 #include<QSizePolicy>
 
+
 login::login(QWidget *parent) : QWidget(parent)
 {
+
+
     logIn = new QLabel("Log In");
     logIn->setStyleSheet("font: 80px;");
     logIn->setAlignment(Qt::AlignCenter);
@@ -23,6 +26,10 @@ login::login(QWidget *parent) : QWidget(parent)
     passEdit->setStyleSheet("font: 40px;");
 
 
+    logInButton = new QPushButton("Log In");
+    logInButton->setStyleSheet("height: 40px;"
+                               "font: 30px;");
+
     signUpButton = new QPushButton("Sign Up");
     signUpButton->setStyleSheet("height: 40px;"
                                 "font: 30px;");
@@ -38,6 +45,7 @@ login::login(QWidget *parent) : QWidget(parent)
     gridLayout->addWidget(usernameEdit, 2, 0);
     gridLayout->addWidget(password, 3,0);
     gridLayout->addWidget(passEdit, 4, 0);
+    gridLayout->addWidget(logInButton, 5, 0);
 
     // Vertical Layout
     verticalLayout = new QVBoxLayout();
@@ -50,4 +58,21 @@ login::login(QWidget *parent) : QWidget(parent)
     verticalLayout->setMargin(40);
 
     setLayout(verticalLayout);
+
+
+    //slots connection
+    // when we press the play as guest button
+    QObject::connect(playAsGuestButton, SIGNAL(clicked(bool)), this, SLOT(playAsGuestFunc()) ) ;
+    // when we press the log in button
 }
+
+void login::playAsGuestFunc(){
+    usernameEdit->setText("Guest");
+    passEdit->setText("GuestPassword1");
+    login::loggingIn();
+}
+
+void login::loggingIn(){
+
+}
+

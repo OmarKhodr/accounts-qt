@@ -18,6 +18,7 @@ private:
     QLabel *password;
     QLineEdit *passEdit;
 
+    QPushButton *logInButton;
     QPushButton *signUpButton;
     QPushButton *playAsGuestButton;
 
@@ -25,6 +26,11 @@ private:
     QVBoxLayout *verticalLayout;
 
 signals:
+
+
+public slots:
+    void playAsGuestFunc();
+    void loggingIn();
 
 };
 
