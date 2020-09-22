@@ -29,3 +29,11 @@ QPushButton* signUpPushButton;
 QLineEdit* usernameLineEdit;
 QLabel* passwordLabel;
 //...
+
+
+
+//BRACES:
+/* Same for all kinds (class, for, function etc.) */
+class A: public B {
+	
+};

@@ -2,7 +2,9 @@ QT+=widgets
 
 SOURCES += \
     login.cpp \
-    main.cpp
+    main.cpp \
+    user.cpp
 
 HEADERS += \
-    login.h
+    login.h \
+    user.h
