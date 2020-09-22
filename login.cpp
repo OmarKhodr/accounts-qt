@@ -46,7 +46,7 @@ login::login(QWidget *parent) : QWidget(parent)
     verticalLayout->addWidget(signUpButton);
     verticalLayout->addWidget(playAsGuestButton);
 
-    verticalLayout->setSpacing(20); // spacing between virtical entries in box
+    verticalLayout->setSpacing(20); // spacing between vertical entries in box
     verticalLayout->setMargin(40);
 
     setLayout(verticalLayout);
