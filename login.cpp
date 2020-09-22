@@ -1,5 +1,6 @@
 #include "login.h"
-#include<QSizePolicy>
+#include <QSizePolicy>
+#include "signup.h"
 
 
 login::login(QWidget *parent) : QWidget(parent)
@@ -61,9 +62,12 @@ login::login(QWidget *parent) : QWidget(parent)
 
 
     //slots connection
+
     // when we press the play as guest button
     QObject::connect(playAsGuestButton, SIGNAL(clicked(bool)), this, SLOT(playAsGuestFunc()) ) ;
     // when we press the log in button
+    // when we press the sign up button instead
+    QObject::connect(signUpButton, SIGNAL(clicked(bool)), this, SLOT(signUpInstead()) );
 }
 
 void login::playAsGuestFunc(){
@@ -73,6 +77,13 @@ void login::playAsGuestFunc(){
 }
 
 void login::loggingIn(){
+
+}
+
+void login::signUpInstead(){
+    signUp* signUpWindow = new signUp();
+    signUpWindow->show();
+    this->close();
 
 }
 

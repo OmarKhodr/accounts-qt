@@ -4,6 +4,7 @@
 #include<QObject>
 #include <QWidget>
 #include<QtWidgets>
+#include<QFileDialog>
 
 class signUp : public QWidget
 {
@@ -22,6 +23,7 @@ private:
     QLabel* date_of_birth;
     QLabel* gender;
     QLabel* profile_pic;
+    QLabel* browse_pic;
 
     QLineEdit* firstName_edit;
     QLineEdit* lastName_edit;
@@ -33,12 +35,28 @@ private:
 
     QPushButton* submit_btn;
     QPushButton* back_to_login;
+    QPushButton* browse_button;
+
+    QGroupBox* gender_radio_buttons_box;
+    QGroupBox* picture_box;
+
+    QRadioButton* gender_male;
+    QRadioButton* gender_female;
+    QRadioButton* gender_other;
 
     QVBoxLayout* vertical_layout;
+    QVBoxLayout* buttons_vertical_layout;
+    QVBoxLayout* picture_vertical_layout;
     QGridLayout* grid_layout;
 
 
+
+
 signals:
+
+private slots:
+    void login_instead();
+    void upload_picture();
 
 };
 

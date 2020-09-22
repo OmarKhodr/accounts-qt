@@ -1,4 +1,5 @@
 #include "signup.h"
+#include "login.h"
 
 signUp::signUp(QWidget *parent) : QWidget(parent)
 {
@@ -30,10 +31,24 @@ signUp::signUp(QWidget *parent) : QWidget(parent)
     gender = new QLabel("Gender");
     gender->setStyleSheet("font: 40px;");
 
+    browse_pic = new QLabel();
+    browse_pic->setFixedSize(300, 200);
+
     date_birth_calendar = new QCalendarWidget();
     date_birth_calendar->setMaximumHeight(440);
     date_birth_calendar->setMinimumWidth(140);
 
+    gender_male = new QRadioButton("Male");
+    gender_female = new QRadioButton("Female");
+    gender_other = new QRadioButton("Other");
+
+    buttons_vertical_layout = new QVBoxLayout();
+    buttons_vertical_layout->addWidget(gender_male);
+    buttons_vertical_layout->addWidget(gender_female);
+    buttons_vertical_layout->addWidget(gender_other);
+    gender_radio_buttons_box = new QGroupBox();
+    gender_radio_buttons_box->setLayout(buttons_vertical_layout);
+    gender_radio_buttons_box->setStyleSheet("Font: 20px;");
 
     firstName_edit = new QLineEdit();
     firstName_edit->setStyleSheet("font: 40px;");
@@ -56,6 +71,16 @@ signUp::signUp(QWidget *parent) : QWidget(parent)
     submit_btn->setStyleSheet("font: 30px;"
                               "height: 40px;");
 
+    browse_button = new QPushButton("Browse For Picture");
+    browse_button->setStyleSheet("font: 20px;"
+                                 "height: 30px;");
+
+    picture_vertical_layout = new QVBoxLayout();
+    picture_vertical_layout->addWidget(browse_pic);
+    picture_vertical_layout->addWidget(browse_button);
+    picture_box = new QGroupBox();
+    picture_box->setLayout(picture_vertical_layout);
+
     // grid layout
     grid_layout = new QGridLayout();
     grid_layout->addWidget(sign_up, 0, 0, 1, 3);
@@ -72,7 +97,9 @@ signUp::signUp(QWidget *parent) : QWidget(parent)
     grid_layout->addWidget(date_of_birth, 6, 0);
     grid_layout->addWidget(date_birth_calendar, 6, 1);
     grid_layout->addWidget(gender, 7, 0);
+    grid_layout->addWidget(gender_radio_buttons_box, 7, 1);
     grid_layout->addWidget(profile_pic, 8, 0);
+    grid_layout->addWidget(picture_box, 8, 1);
     grid_layout->addWidget(submit_btn, 9, 0, 9, 2);
 
 
@@ -87,6 +114,42 @@ signUp::signUp(QWidget *parent) : QWidget(parent)
     // set overall layout
     setLayout(vertical_layout);
 
+    // connect the login button
+    QObject::connect(back_to_login, SIGNAL(clicked(bool)), this, SLOT(login_instead()));
+    // Let's user browse for his/her own picture to add
+    QObject::connect(browse_button, SIGNAL(clicked(bool)), this, SLOT(upload_picture() ) );
+
+}
+
+void signUp::login_instead(){
+    login* log_window = new login();
+    log_window->show();
+    this->close();
+}
+
+
+void signUp::upload_picture(){
+
+    // filename variable will hold the name of the file the user chooses
+    QString filename = QFileDialog::getOpenFileName(this, tr("Choose a picture"),
+                                                    "", tr("Images (*.png *.jpg *.jpeg *.bmp)"));
+    // check if file name is valid
+
+    if(QString::compare(filename, QString()) != 0 ){
+
+        QImage image;
+        bool valid = image.load(filename);  // if what is loaded is a valid image it's true
+
+        if (valid){
+
+            image = image.scaledToWidth(browse_pic->width(), Qt::SmoothTransformation);
+            browse_pic->setPixmap(QPixmap::fromImage(image));
+
+        } else{
+            // We can add some kind of error handling
+        }
+
+    }
 
 }
 

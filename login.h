@@ -25,12 +25,14 @@ private:
     QGridLayout *gridLayout;
     QVBoxLayout *verticalLayout;
 
+
 signals:
 
 
 public slots:
     void playAsGuestFunc();
     void loggingIn();
+    void signUpInstead();
 
 };
 
