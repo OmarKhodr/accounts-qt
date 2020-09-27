@@ -4,6 +4,8 @@
 #include<QObject>
 #include <QWidget>
 #include<QtWidgets>
+#include "app.h"
+#include "user.h"
 
 class login : public QWidget
 {
@@ -24,6 +26,8 @@ private:
 
     QGridLayout *gridLayout;
     QVBoxLayout *verticalLayout;
+
+    App app;
 
 
 signals:

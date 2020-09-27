@@ -1,6 +1,6 @@
 #include "user.h"
 
-//#include <QMetaEnum>
+#include <QBuffer>
 
 User::User() :
     gender(Female) {
@@ -14,6 +14,9 @@ void User::setUsername(const QString &ausername) {
     username = ausername;
 }
 
+QString User::getPassword() const {
+    return password;
+}
 void User::setPassword(const QString &apassword) {
     password = apassword;
 }
@@ -53,6 +56,28 @@ void User::setProfilePicture(const QImage &aprofilePicture) {
     profilePicture = aprofilePicture;
 }
 
+//QMap<QString, int> User::getHighScores() const {
+//    return highScores;
+//}
+//void User::setHighScores(const QMap<QString, int> &ahighScores) {
+//    highScores = ahighScores;
+//}
+
+QJsonValue jsonValFromImage(const QImage &p) {
+  QBuffer buffer;
+  buffer.open(QIODevice::WriteOnly);
+  p.save(&buffer, "PNG");
+  auto const encoded = buffer.data().toBase64();
+  return {QLatin1String(encoded)};
+}
+
+QImage imageFromJsonVal(const QJsonValue &val) {
+  auto const encoded = val.toString().toLatin1();
+  QImage p;
+  p.loadFromData(QByteArray::fromBase64(encoded), "PNG");
+  return p;
+}
+
 void User::read(const QJsonObject &json) {
     if (json.contains("username") && json["username"].isString()) {
         username = json["username"].toString();
@@ -66,5 +91,35 @@ void User::read(const QJsonObject &json) {
     if (json.contains("lastName") && json["lastName"].isString()) {
         firstName = json["lastName"].toString();
     }
+    if (json.contains("dateOfBirth") && json["dateOfBirth"].isString()) {
+        QString s = json["dateOfBirth"].toString();
+        QStringList parts = s.split(QString("/"));
+        int year = parts.at(0).toInt(), month = parts.at(1).toInt(), day = parts.at(2).toInt();
+        dateOfBirth = QDate(year, month, day);
+    }
+    if (json.contains("gender") && json["gender"].isDouble()) {
+        gender = Gender(json["gender"].toInt());
+    }
+    if (json.contains("profilePicture")) {
+        QJsonValue val = json.value("profilePicture");
+        profilePicture = imageFromJsonVal(val);
+    }
 
+}
+
+void User::write(QJsonObject &json) const {
+    json["username"] = username;
+    json["password"] = password;
+    json["firstName"] = firstName;
+    json["lastName"] = lastName;
+    QString date = "";
+    date.append(dateOfBirth.year());
+    date.append("/");
+    date.append(dateOfBirth.month());
+    date.append("/");
+    date.append(dateOfBirth.day());
+    date.append("/");
+    json["dateOfBirth"] = date;
+    json["gender"] = gender;
+    json["profilePicture"] = jsonValFromImage(profilePicture);
 }

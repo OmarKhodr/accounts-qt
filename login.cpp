@@ -2,6 +2,12 @@
 #include <QSizePolicy>
 #include "signup.h"
 
+#include <QFile>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QRandomGenerator>
+#include <QTextStream>
+
 
 login::login(QWidget *parent) : QWidget(parent)
 {
@@ -59,15 +65,15 @@ login::login(QWidget *parent) : QWidget(parent)
     verticalLayout->setMargin(40);
 
     setLayout(verticalLayout);
-
-
     //slots connection
 
     // when we press the play as guest button
-    QObject::connect(playAsGuestButton, SIGNAL(clicked(bool)), this, SLOT(playAsGuestFunc()) ) ;
+    QObject::connect(playAsGuestButton, SIGNAL(clicked(bool)), this, SLOT(playAsGuestFunc()));
     // when we press the log in button
+    QObject::connect(logInButton, SIGNAL(clicked(bool)), this, SLOT(loggingIn()));
     // when we press the sign up button instead
-    QObject::connect(signUpButton, SIGNAL(clicked(bool)), this, SLOT(signUpInstead()) );
+    QObject::connect(signUpButton, SIGNAL(clicked(bool)), this, SLOT(signUpInstead()));
+
 }
 
 void login::playAsGuestFunc(){
@@ -77,13 +83,24 @@ void login::playAsGuestFunc(){
 }
 
 void login::loggingIn(){
+    QString username = usernameEdit->text();
+    QString password = passEdit->text();
+
+    if (app.login(username, password)) {
+        User user = app.getUser(username);
+        //SHOW PROFILE WINDOW
+        usernameEdit->setText("SUCCESS");
+    } else {
+        //SHOW ERROR
+        usernameEdit->setText("FAILURE");
+    }
 
 }
 
 void login::signUpInstead(){
+
     signUp* signUpWindow = new signUp();
     signUpWindow->show();
     this->close();
-
 }
 

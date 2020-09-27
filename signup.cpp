@@ -4,39 +4,39 @@
 signUp::signUp(QWidget *parent) : QWidget(parent)
 {
     sign_up = new QLabel("Sign Up");
-    sign_up->setStyleSheet("font: 80px;");
+//    sign_up->setStyleSheet("font: 80px;");
     sign_up->setAlignment(Qt::AlignCenter);
 
     first_name = new QLabel("First Name");
-    first_name->setStyleSheet("font: 40px;");
+//    first_name->setStyleSheet("font: 40px;");
 
     last_name = new QLabel("Last Name");
-    last_name->setStyleSheet("font: 40px;");
+//    last_name->setStyleSheet("font: 40px;");
 
     username = new QLabel("Username");
-    username->setStyleSheet("font: 40px;");
+//    username->setStyleSheet("font: 40px;");
 
     password = new QLabel("Password");
-    password->setStyleSheet("font: 40px;");
+//    password->setStyleSheet("font: 40px;");
 
     confirm_password = new QLabel("Confirm Password");
-    confirm_password->setStyleSheet("font: 40px;");
+//    confirm_password->setStyleSheet("font: 40px;");
 
     date_of_birth = new QLabel("Date Of Birth");
-    date_of_birth->setStyleSheet("font: 40px");
+//    date_of_birth->setStyleSheet("font: 40px");
 
     profile_pic = new QLabel("Profile Picture");
-    profile_pic->setStyleSheet("font: 40px;");
+//    profile_pic->setStyleSheet("font: 40px;");
 
     gender = new QLabel("Gender");
-    gender->setStyleSheet("font: 40px;");
+//    gender->setStyleSheet("font: 40px;");
 
     browse_pic = new QLabel();
-    browse_pic->setFixedSize(300, 200);
+//    browse_pic->setFixedSize(300, 200);
 
     date_birth_calendar = new QCalendarWidget();
-    date_birth_calendar->setMaximumHeight(440);
-    date_birth_calendar->setMinimumWidth(140);
+//    date_birth_calendar->setMaximumHeight(440);
+//    date_birth_calendar->setMinimumWidth(140);
 
     gender_male = new QRadioButton("Male");
     gender_female = new QRadioButton("Female");
@@ -48,32 +48,32 @@ signUp::signUp(QWidget *parent) : QWidget(parent)
     buttons_vertical_layout->addWidget(gender_other);
     gender_radio_buttons_box = new QGroupBox();
     gender_radio_buttons_box->setLayout(buttons_vertical_layout);
-    gender_radio_buttons_box->setStyleSheet("Font: 20px;");
+//    gender_radio_buttons_box->setStyleSheet("Font: 20px;");
 
     firstName_edit = new QLineEdit();
-    firstName_edit->setStyleSheet("font: 40px;");
+//    firstName_edit->setStyleSheet("font: 40px;");
     lastName_edit = new QLineEdit();
-    lastName_edit->setStyleSheet("font: 40px;");
+//    lastName_edit->setStyleSheet("font: 40px;");
     username_edit = new QLineEdit();
-    username_edit->setStyleSheet("font: 40px;");
+//    username_edit->setStyleSheet("font: 40px;");
     password_edit = new QLineEdit();
-    password_edit->setStyleSheet("font: 40px;");
+//    password_edit->setStyleSheet("font: 40px;");
     password_edit->setEchoMode(QLineEdit::Password);
     confirm_edit = new QLineEdit();
-    confirm_edit->setStyleSheet("font: 40px;");
+//    confirm_edit->setStyleSheet("font: 40px;");
     confirm_edit->setEchoMode(QLineEdit::Password);
 
 
     back_to_login = new QPushButton("Back to Log In");
-    back_to_login->setStyleSheet("font: 30px;"
-                                 "height: 40px;");
+//    back_to_login->setStyleSheet("font: 30px;"
+//                                 "height: 40px;");
     submit_btn = new QPushButton("Submit");
-    submit_btn->setStyleSheet("font: 30px;"
-                              "height: 40px;");
+//    submit_btn->setStyleSheet("font: 30px;"
+//                              "height: 40px;");
 
     browse_button = new QPushButton("Browse For Picture");
-    browse_button->setStyleSheet("font: 20px;"
-                                 "height: 30px;");
+//    browse_button->setStyleSheet("font: 20px;"
+//                                 "height: 30px;");
 
     picture_vertical_layout = new QVBoxLayout();
     picture_vertical_layout->addWidget(browse_pic);
@@ -117,7 +117,9 @@ signUp::signUp(QWidget *parent) : QWidget(parent)
     // connect the login button
     QObject::connect(back_to_login, SIGNAL(clicked(bool)), this, SLOT(login_instead()));
     // Let's user browse for his/her own picture to add
-    QObject::connect(browse_button, SIGNAL(clicked(bool)), this, SLOT(upload_picture() ) );
+    QObject::connect(browse_button, SIGNAL(clicked(bool)), this, SLOT(upload_picture()));
+    //sign up
+    QObject::connect(submit_btn, SIGNAL(clicked(bool)), this, SLOT(signup()));
 
 }
 
@@ -151,5 +153,39 @@ void signUp::upload_picture(){
 
     }
 
+}
+
+void invalid(QLabel* label) {
+
+}
+
+void signUp::signup() {
+    User user;
+    if (QString::compare(username_edit->text(), QString()) == 0) {
+        invalid(username);
+    } else if (QString::compare(firstName_edit->text(), QString()) == 0) {
+        invalid(first_name);
+    } else if (QString::compare(lastName_edit->text(), QString()) == 0) {
+        invalid(last_name);
+    } else if (QString::compare(password_edit->text(), QString()) == 0) {
+        invalid(password);
+    } else if (QString::compare(confirm_edit->text(), QString()) == 0 || QString::compare(confirm_edit->text(), password_edit->text()) != 0) {
+        invalid(confirm_password);
+    } else if (!gender_male->isChecked() && !gender_female->isChecked() && !gender_other->isChecked()) {
+        invalid(gender);
+    }
+    user.setUsername(username_edit->text());
+    user.setPassword(password_edit->text());
+    user.setFirstName(firstName_edit->text());
+    user.setLastName(lastName_edit->text());
+    user.setDateOfBirth(date_birth_calendar->selectedDate());
+    if (gender_male->isChecked()) {
+        user.setGender(User::Male);
+    } else if (gender_female->isChecked()) {
+        user.setGender(User::Female);
+    } else {
+        user.setGender(User::Other);
+    }
+    app.signup(user);
 }
 

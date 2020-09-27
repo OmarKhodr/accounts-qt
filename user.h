@@ -5,6 +5,7 @@
 #include <QString>
 #include <QDate>
 #include <QImage>
+#include <QMap>
 
 class User {
 
@@ -12,7 +13,7 @@ class User {
 
 public:
     enum Gender {
-        Male, Female
+        Male, Female, Other
     };
     Q_ENUM(Gender)
 
@@ -21,6 +22,7 @@ public:
     QString getUsername() const;
     void setUsername(const QString &ausername);
 
+    QString getPassword() const;
     void setPassword(const QString &apassword);
 
     QString getFirstName() const;
@@ -38,6 +40,9 @@ public:
     QImage getProfilePicture() const;
     void setProfilePicture(const QImage &aprofilePicture);
 
+//    QMap<QString, int> getHighScores() const;
+//    void setHighScores(const QMap<QString, int> &ahighScores);
+
     void read(const QJsonObject &json);
     void write(QJsonObject &json) const;
 
@@ -49,6 +54,7 @@ private:
     QDate dateOfBirth;
     Gender gender;
     QImage profilePicture;
+//    QMap<QString, int> highScores;
 };
 
 #endif // USER_H

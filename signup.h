@@ -6,6 +6,9 @@
 #include<QtWidgets>
 #include<QFileDialog>
 
+#include "app.h"
+#include "user.h"
+
 class signUp : public QWidget
 {
     Q_OBJECT
@@ -49,6 +52,8 @@ private:
     QVBoxLayout* picture_vertical_layout;
     QGridLayout* grid_layout;
 
+    App app;
+
 
 
 
@@ -57,7 +62,7 @@ signals:
 private slots:
     void login_instead();
     void upload_picture();
-
+    void signup();
 };
 
 #endif // SIGNUP_H
