@@ -6,6 +6,7 @@
 #include<QtWidgets>
 #include "app.h"
 #include "user.h"
+#include"highscoreswindow.h"
 
 class login : public QWidget
 {
@@ -37,6 +38,8 @@ public slots:
     void playAsGuestFunc();
     void loggingIn();
     void signUpInstead();
+    void highscoresPage(User user);
+    void openErrorWindow();
 
 };
 

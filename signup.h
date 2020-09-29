@@ -17,6 +17,7 @@ public:
 
 
 private:
+
     QLabel* sign_up;
     QLabel* first_name;
     QLabel* last_name;
@@ -63,6 +64,9 @@ private slots:
     void login_instead();
     void upload_picture();
     void signup();
+    void invalid(QLabel* label, int errorCode);
+    void validate_Username();
+    void validate_password();
 };
 
 #endif // SIGNUP_H

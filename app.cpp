@@ -7,6 +7,24 @@
 
 App::App() { }
 
+void App::readFromJSON(){
+    if (users.size() == 0) {
+
+        QFile loadFile(QStringLiteral("save.json"));
+
+        if (!loadFile.open(QIODevice::ReadOnly)) {
+                qWarning("Couldn't open save file.");
+         }
+
+        QByteArray saveData = loadFile.readAll();
+
+        QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
+
+        read(loadDoc.object());
+    }
+
+}
+
 QVector<User> App::getUsers() const {
     return users;
 }
@@ -41,6 +59,7 @@ bool App::login(const QString &username, const QString &password) {
     return false;
 }
 
+
 bool App::signup(const User &user) {
     if (users.size() == 0) {
         QFile loadFile("save.json");
@@ -65,6 +84,7 @@ bool App::signup(const User &user) {
     QJsonObject appObj;
     write(appObj);
     QJsonDocument saveDoc(appObj);
+
     saveFile.write(saveDoc.toJson());
 
     return true;
@@ -103,3 +123,6 @@ void App::write(QJsonObject &json) const {
     }
     json["users"] = usersArray;
 }
+
+
+

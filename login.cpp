@@ -1,6 +1,7 @@
 #include "login.h"
 #include <QSizePolicy>
 #include "signup.h"
+#include<errorwindows.h>
 
 #include <QFile>
 #include <QJsonArray>
@@ -88,12 +89,14 @@ void login::loggingIn(){
 
     if (app.login(username, password)) {
         User user = app.getUser(username);
-        //SHOW PROFILE WINDOW
-        usernameEdit->setText("SUCCESS");
+        usernameEdit->setText(user.getUsername());
+        login::highscoresPage(user);
     } else {
-        //SHOW ERROR
         usernameEdit->setText("FAILURE");
+        login::openErrorWindow();
+
     }
+
 
 }
 
@@ -102,5 +105,18 @@ void login::signUpInstead(){
     signUp* signUpWindow = new signUp();
     signUpWindow->show();
     this->close();
+}
+
+void login::highscoresPage(User user){
+    highscoresWindow* highWindow = new highscoresWindow(user);
+    highWindow->show();
+    this->close();
+}
+
+void login::openErrorWindow(){
+    errorWindows* errorW = new errorWindows();
+    errorW->setErrorLabel("Username or Password is incorrect!");
+    errorW->show();
+
 }
 

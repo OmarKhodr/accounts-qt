@@ -20,8 +20,11 @@ public:
     QVector<User> getUsers() const;
     void setUsers(const QVector<User> &ausers);
 
+    void readFromJSON();
+
 private:
     QVector<User> users;
+
 
 };
 

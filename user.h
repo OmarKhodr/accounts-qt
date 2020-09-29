@@ -6,6 +6,7 @@
 #include <QDate>
 #include <QImage>
 #include <QMap>
+#include<QPixmap>
 
 class User {
 
@@ -37,8 +38,8 @@ public:
     Gender getGender() const;
     void setGender(Gender agender);
 
-    QImage getProfilePicture() const;
-    void setProfilePicture(const QImage &aprofilePicture);
+    QPixmap getProfilePicture() const;
+    void setProfilePicture(const QPixmap &aprofilePicture);
 
 //    QMap<QString, int> getHighScores() const;
 //    void setHighScores(const QMap<QString, int> &ahighScores);
@@ -53,7 +54,7 @@ private:
     QString lastName;
     QDate dateOfBirth;
     Gender gender;
-    QImage profilePicture;
+    QPixmap profilePicture;
 //    QMap<QString, int> highScores;
 };
 

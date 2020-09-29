@@ -1,8 +1,11 @@
 #include "signup.h"
 #include "login.h"
+#include"successwindow.h"
+#include"errorwindows.h"
 
 signUp::signUp(QWidget *parent) : QWidget(parent)
 {
+
     sign_up = new QLabel("Sign Up");
 //    sign_up->setStyleSheet("font: 80px;");
     sign_up->setAlignment(Qt::AlignCenter);
@@ -114,12 +117,70 @@ signUp::signUp(QWidget *parent) : QWidget(parent)
     // set overall layout
     setLayout(vertical_layout);
 
+
+    // loading the users
+    app.readFromJSON();
+
     // connect the login button
     QObject::connect(back_to_login, SIGNAL(clicked(bool)), this, SLOT(login_instead()));
     // Let's user browse for his/her own picture to add
     QObject::connect(browse_button, SIGNAL(clicked(bool)), this, SLOT(upload_picture()));
     //sign up
     QObject::connect(submit_btn, SIGNAL(clicked(bool)), this, SLOT(signup()));
+    // check if username already exists
+    QObject::connect(username_edit, SIGNAL(editingFinished()), this, SLOT(validate_Username()));
+    // check if both passwords are equal
+    QObject::connect(confirm_edit, SIGNAL(editingFinished()), this, SLOT(check_Both_Passwords()));
+    // check if password has requirements
+    QObject::connect(password_edit, SIGNAL(editingFinished()), this, SLOT(validate_password()));
+
+}
+
+void signUp::validate_Username(){
+    // check if username already taken
+    bool taken = false;
+    QVector<User> users = app.getUsers();
+    for (User user: users ){
+        QString userName = user.getUsername();
+        if(QString::compare(userName, username_edit->text())==0 ){
+            taken = true;
+        }
+    }
+    if(taken == true ){
+        signUp::invalid(username, 1);
+    }
+
+}
+
+
+void signUp::validate_password(){
+    bool valid_size = true;
+    bool valid_numbers = false;
+    bool valid_upper = false;
+    bool valid_lower = false;
+    QString pass = password_edit->text();
+    if (pass.size()<8){
+        valid_size = false;
+    }
+    for (int i = 0 ; i<pass.size(); i++){
+        if ( pass[i]>='0' and pass[i]<='9'){
+            valid_numbers = true;
+        }
+        else if (pass[i]>='a' and pass[i]<='z'){
+            valid_lower = true;
+        }
+        else if (pass[i]>='A' and pass[i]<='Z'){
+            valid_upper = true;
+        }
+
+        if (valid_lower and valid_upper and valid_numbers){
+            break;
+        }
+    }
+
+    if ( (!valid_size) or (!valid_lower) or (!valid_upper) or (!valid_numbers) ){
+        invalid(password, 2);
+    }
 
 }
 
@@ -155,30 +216,63 @@ void signUp::upload_picture(){
 
 }
 
-void invalid(QLabel* label) {
-
+void signUp::invalid(QLabel* label, int errorCode) {
+    errorWindows* errW = new errorWindows();
+    if (label->text()=="Username"){
+        if(errorCode==1){
+            errW->setErrorLabel("Username already taken!");
+        }else{
+            errW->setErrorLabel("Username field is empty!");
+        }
+        username_edit->setStyleSheet("border: 1px solid red;");
+    } else if(label->text()=="First Name"){
+        errW->setErrorLabel("First name field is empty!");
+        firstName_edit->setStyleSheet("border: 1px solid red;");
+    } else if(label->text()=="Last Name"){
+        errW->setErrorLabel("Last Name field is empty!");
+        lastName_edit->setStyleSheet("border: 1px solid red;");
+    } else if(label->text()=="Gender"){
+        errW->setErrorLabel("Gender field is empty!");
+    } else if(label->text()=="Password"){
+        if(errorCode==0){
+            errW->setErrorLabel("Password field is empty!");
+            password_edit->setStyleSheet("border: 1px solid red;");
+        }
+        else if (errorCode==1){
+            errW->setErrorLabel("Password field and confirm password are not holding the same password!");
+            confirm_edit->setStyleSheet("border: 1px solid red;");
+        }
+        else if(errorCode==2){
+            errW->setErrorLabel("Password must contain at least 8 letters, one uppercase, one lowercase and a number!");
+            password_edit->setStyleSheet("border: 1px solid red;");
+        }
+    }
+    errW->show();
 }
 
 void signUp::signup() {
     User user;
     if (QString::compare(username_edit->text(), QString()) == 0) {
-        invalid(username);
+        invalid(username, 0);
     } else if (QString::compare(firstName_edit->text(), QString()) == 0) {
-        invalid(first_name);
+        invalid(first_name, 0);
     } else if (QString::compare(lastName_edit->text(), QString()) == 0) {
-        invalid(last_name);
+        invalid(last_name, 0);
     } else if (QString::compare(password_edit->text(), QString()) == 0) {
-        invalid(password);
-    } else if (QString::compare(confirm_edit->text(), QString()) == 0 || QString::compare(confirm_edit->text(), password_edit->text()) != 0) {
-        invalid(confirm_password);
+        invalid(password, 0);
+    } else if (QString::compare(confirm_edit->text(), QString()) == 0 ) {
+        invalid(confirm_password,0);
+    } else if (QString::compare(confirm_edit->text(), password_edit->text()) != 0){
+        invalid(password, 1);
     } else if (!gender_male->isChecked() && !gender_female->isChecked() && !gender_other->isChecked()) {
-        invalid(gender);
+        invalid(gender, 0);
     }
     user.setUsername(username_edit->text());
     user.setPassword(password_edit->text());
     user.setFirstName(firstName_edit->text());
     user.setLastName(lastName_edit->text());
     user.setDateOfBirth(date_birth_calendar->selectedDate());
+    user.setProfilePicture(*(browse_pic->pixmap() ));
     if (gender_male->isChecked()) {
         user.setGender(User::Male);
     } else if (gender_female->isChecked()) {
@@ -187,5 +281,15 @@ void signUp::signup() {
         user.setGender(User::Other);
     }
     app.signup(user);
+    // display success window
+    successWindow* sW = new successWindow();
+    sW->setSuccessLabel("User successfully created! You can now head back to Log In!");
+    sW->show();
+    username_edit->setText("");
+    password_edit->setText("");
+    confirm_edit->setText("");
+    firstName_edit->setText("");
+    lastName_edit->setText("");
+
 }
 
