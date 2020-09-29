@@ -254,25 +254,32 @@ void signUp::signup() {
     User user;
     if (QString::compare(username_edit->text(), QString()) == 0) {
         invalid(username, 0);
+        return;
     } else if (QString::compare(firstName_edit->text(), QString()) == 0) {
         invalid(first_name, 0);
+        return;
     } else if (QString::compare(lastName_edit->text(), QString()) == 0) {
         invalid(last_name, 0);
+        return;
     } else if (QString::compare(password_edit->text(), QString()) == 0) {
         invalid(password, 0);
+        return;
     } else if (QString::compare(confirm_edit->text(), QString()) == 0 ) {
         invalid(confirm_password,0);
+        return;
     } else if (QString::compare(confirm_edit->text(), password_edit->text()) != 0){
         invalid(password, 1);
+        return;
     } else if (!gender_male->isChecked() && !gender_female->isChecked() && !gender_other->isChecked()) {
         invalid(gender, 0);
+        return;
     }
     user.setUsername(username_edit->text());
     user.setPassword(password_edit->text());
     user.setFirstName(firstName_edit->text());
     user.setLastName(lastName_edit->text());
     user.setDateOfBirth(date_birth_calendar->selectedDate());
-    user.setProfilePicture(*(browse_pic->pixmap() ));
+    user.setProfilePicture(*(browse_pic->pixmap()));
     if (gender_male->isChecked()) {
         user.setGender(User::Male);
     } else if (gender_female->isChecked()) {
@@ -280,6 +287,11 @@ void signUp::signup() {
     } else {
         user.setGender(User::Other);
     }
+    QVector<int> scores;
+    for (int i=0; i<10; i++) {
+        scores.append(i*100);
+    }
+    user.setScores(scores);
     app.signup(user);
     // display success window
     successWindow* sW = new successWindow();

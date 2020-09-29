@@ -7,6 +7,7 @@
 #include <QImage>
 #include <QMap>
 #include<QPixmap>
+#include <QJsonArray>
 
 class User {
 
@@ -41,8 +42,8 @@ public:
     QPixmap getProfilePicture() const;
     void setProfilePicture(const QPixmap &aprofilePicture);
 
-//    QMap<QString, int> getHighScores() const;
-//    void setHighScores(const QMap<QString, int> &ahighScores);
+    QVector<int> getScores() const;
+    void setScores(const QVector<int> &ascores);
 
     void read(const QJsonObject &json);
     void write(QJsonObject &json) const;
@@ -55,7 +56,7 @@ private:
     QDate dateOfBirth;
     Gender gender;
     QPixmap profilePicture;
-//    QMap<QString, int> highScores;
+    QVector<int> scores;
 };
 
 #endif // USER_H

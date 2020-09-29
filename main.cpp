@@ -6,8 +6,7 @@
 int main(int argc, char** argv){
 
     QApplication app(argc, argv);
-
-    login logmain ;
+    login logmain;
     logmain.show();
 
     return app.exec();

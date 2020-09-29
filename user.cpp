@@ -56,29 +56,12 @@ void User::setProfilePicture(const QPixmap &aprofilePicture) {
     profilePicture = aprofilePicture;
 }
 
-//QMap<QString, int> User::getHighScores() const {
-//    return highScores;
-//}
-//void User::setHighScores(const QMap<QString, int> &ahighScores) {
-//    highScores = ahighScores;
-//}
-
-/*
-QJsonValue jsonValFromImage(const QImage &p) {
-  QBuffer buffer;
-  buffer.open(QIODevice::WriteOnly);
-  p.save(&buffer, "PNG");
-  auto const encoded = buffer.data().toBase64();
-  return {QLatin1String(encoded)};
+QVector<int> User::getScores() const {
+    return scores;
 }
-
-QImage imageFromJsonVal(const QJsonValue &val) {
-  auto const encoded = val.toString().toLatin1();
-  QImage p;
-  p.loadFromData(QByteArray::fromBase64(encoded), "PNG");
-  return p;
+void User::setScores(const QVector<int> &ascores) {
+    scores = ascores;
 }
-*/
 
 QJsonValue jsonValFromPixmap(const QPixmap &p) {
   QBuffer buffer;
@@ -121,7 +104,15 @@ void User::read(const QJsonObject &json) {
         QJsonValue val = json.value("profilePicture");
         profilePicture = pixmapFrom(val);
     }
-
+    if (json.contains("scores") && json["scores"].isArray()) {
+        QJsonArray arr = json["scores"].toArray();
+        scores.clear();
+        scores.reserve(arr.size());
+        for (int ind=0; ind<arr.size(); ind++) {
+            int score = arr[ind].toInt();
+            scores.append(score);
+        }
+    }
 }
 
 void User::write(QJsonObject &json) const {
@@ -139,4 +130,9 @@ void User::write(QJsonObject &json) const {
     json["dateOfBirth"] = date;
     json["gender"] = gender;
     json["profilePicture"] = jsonValFromPixmap(profilePicture);
+    QJsonArray scoresArray;
+    foreach (const int score, scores) {
+        scoresArray.append(score);
+    }
+    json["scores"] = scoresArray;
 }

@@ -20,6 +20,7 @@ public:
 
     QVBoxLayout* verticalLayoutRight;
     QVBoxLayout* verticalLayoutLeft;
+    QVector<QLabel*> scores;
 
     QGroupBox* groupBoxRight;
     QGroupBox* groupBoxLeft;
