@@ -19,8 +19,10 @@ private:
 
     QVBoxLayout* verticalLayout;
 
-public slots:
+public :
     void setSuccessLabel(QString str);
+    void setSuccessLabelPicture(QPixmap pic);
+    void changeSuccessLabel(QString str);
 
 };
 

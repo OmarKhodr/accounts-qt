@@ -1,21 +1,39 @@
 #include "highscoreswindow.h"
 
 
-highscoresWindow::highscoresWindow(User user, QWidget *parent) : QWidget(parent)
+highscoresWindow::highscoresWindow(App app, int code, User user, QWidget *parent) : QWidget(parent)
 {
-    // getting the user info
-    QString username = user.getUsername();
-    QString firstName = user.getFirstName();
-    QString lastName = user.getLastName();
 
-    QPixmap profilePic = user.getProfilePicture();
+    QDate userBirthday = user.getDateOfBirth();
+    QString userBirthdayString = userBirthday.toString();
+    checkIfBirthday(userBirthdayString);
+
     profilePicLabel = new QLabel();
-    profilePicLabel->setPixmap(profilePic);
+    profilePicLabel->setAlignment(Qt::AlignCenter);
 
-    welcomeLabel = new QLabel("Welcome back " + firstName +" "+ lastName + "!");
-    usernameLabel = new QLabel(username);
+    welcomeLabel = new QLabel();
+    usernameLabel = new QLabel();
     usernameLabel->setStyleSheet("font: 45px;");
     usernameLabel->setAlignment(Qt::AlignCenter);
+
+    // these widgets will be on the right
+
+    globalHighscorePlayerLabel = new QLabel(app.getHighscore());
+    globalHighscorePlayerLabel->setAlignment(Qt::AlignCenter);
+    userScoresLabel = new QLabel();
+    userScoresLabel->setAlignment(Qt::AlignCenter);
+    compareScoresLabel = new QLabel();
+    compareScoresLabel->setAlignment(Qt::AlignCenter);
+
+
+    // code==0 then play as guest
+    if (code == 0){
+        playAsGuest();
+    }
+
+    if(code == 1){
+        playAsUser(user);
+    }
 
     gridLayout = new QGridLayout();
 
@@ -28,9 +46,21 @@ highscoresWindow::highscoresWindow(User user, QWidget *parent) : QWidget(parent)
     verticalLayoutLeft->addWidget(usernameLabel);
     verticalLayoutLeft->addWidget(welcomeLabel);
 
+    // widgets that will be on the right
+    highscoreLabel = new QLabel("HIGHSCORE");
+    highscoreLabel->setStyleSheet("font: 30px;");
+    highscoreLabel->setAlignment(Qt::AlignCenter);
+
+
+
     // setting the vertical layout on the right
     verticalLayoutRight = new QVBoxLayout();
+    verticalLayoutRight->addWidget(highscoreLabel);
+    verticalLayoutRight->addWidget(globalHighscorePlayerLabel);
+    verticalLayoutRight->addWidget(userScoresLabel);
+    verticalLayoutRight->addWidget(compareScoresLabel);
 
+    // setting the layout of the group boxes
     groupBoxLeft->setLayout(verticalLayoutLeft);
     groupBoxRight->setLayout(verticalLayoutRight);
 
@@ -40,5 +70,43 @@ highscoresWindow::highscoresWindow(User user, QWidget *parent) : QWidget(parent)
     gridLayout->addWidget(groupBoxRight, 0, 1);
 
     setLayout(gridLayout);
+}
+
+// if it's the user's birthday display a "Happy Birthday message"
+void highscoresWindow::checkIfBirthday(QString birthdayStr){
+    QDate currentDate = QDate::currentDate();
+    QString dateString = currentDate.toString();
+
+    if (QString::compare(dateString , birthdayStr)==0){
+        successWindow* succW = new successWindow();
+        succW->changeSuccessLabel("TODAY IS YOUR BIRTHDAY! ");
+        succW->setSuccessLabelPicture(QPixmap(":/images/banner-happy-birthday.png"));
+        succW->show();
+    }
+
+}
+
+void highscoresWindow::playAsGuest(){
+    profilePicLabel->setPixmap(QPixmap(":/images/User_icon.png").scaled(200, 200));
+    usernameLabel->setText("Guest");
+    welcomeLabel->setText("We welcome you as a guest! Hope you enjoy!");
+    userScoresLabel->setText("Scores: \n When you play as Guest no scores are saved!");
+
+}
+
+void highscoresWindow::playAsUser(User user){
+    // getting the user info
+    QString username = user.getUsername();
+    QString firstName = user.getFirstName();
+    QString lastName = user.getLastName();
+
+    QPixmap profilePic = user.getProfilePicture();
+
+    welcomeLabel->setText( "Welcome back " + firstName +" "+ lastName + "!");
+    usernameLabel->setText(username);
+    profilePicLabel->setPixmap(profilePic);
+    userScoresLabel->setText(user.getUserScores());
+
+
 }
 

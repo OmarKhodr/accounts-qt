@@ -38,7 +38,7 @@ public slots:
     void playAsGuestFunc();
     void loggingIn();
     void signUpInstead();
-    void highscoresPage(User user);
+    void highscoresPage(int code, User user);
     void openErrorWindow();
 
 };

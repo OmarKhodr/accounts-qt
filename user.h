@@ -8,6 +8,7 @@
 #include <QMap>
 #include<QPixmap>
 #include <QJsonArray>
+#include<QtAlgorithms>
 
 class User {
 
@@ -47,6 +48,8 @@ public:
 
     void read(const QJsonObject &json);
     void write(QJsonObject &json) const;
+
+    QString getUserScores();
 
 private:
     QString username;

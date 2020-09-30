@@ -15,35 +15,22 @@ login::login(QWidget *parent) : QWidget(parent)
 
 
     logIn = new QLabel("Log In");
-    logIn->setStyleSheet("font: 80px;");
+    logIn->setStyleSheet("font: 25px;");
     logIn->setAlignment(Qt::AlignCenter);
 
     username = new QLabel("Username");
-    username->setStyleSheet("font: 40px;");
-    username->setMargin(0);
     password = new QLabel("Password");
-    password->setStyleSheet("font: 40px;");
-    password->setMargin(0);
 
     usernameEdit = new QLineEdit();
-    usernameEdit->setStyleSheet("font: 40px;");
-
 
     passEdit = new QLineEdit();
     passEdit->setEchoMode(QLineEdit::Password);   // this will hide when inputing the password
-    passEdit->setStyleSheet("font: 40px;");
 
 
     logInButton = new QPushButton("Log In");
-    logInButton->setStyleSheet("height: 40px;"
-                               "font: 30px;");
 
     signUpButton = new QPushButton("Sign Up");
-    signUpButton->setStyleSheet("height: 40px;"
-                                "font: 30px;");
     playAsGuestButton = new QPushButton("Play as Guest");
-    playAsGuestButton->setStyleSheet("height: 40px;"
-                                     "font: 30px;");
 
     // Grid Layout
     gridLayout = new QGridLayout();
@@ -80,7 +67,8 @@ login::login(QWidget *parent) : QWidget(parent)
 void login::playAsGuestFunc(){
     usernameEdit->setText("Guest");
     passEdit->setText("GuestPassword1");
-    login::loggingIn();
+    User* u = new User();
+    login::highscoresPage(0, *u );
 }
 
 void login::loggingIn(){
@@ -90,7 +78,7 @@ void login::loggingIn(){
     if (app.login(username, password)) {
         User user = app.getUser(username);
         usernameEdit->setText(user.getUsername());
-        login::highscoresPage(user);
+        login::highscoresPage(1, user);
     } else {
         usernameEdit->setText("FAILURE");
         login::openErrorWindow();
@@ -107,8 +95,9 @@ void login::signUpInstead(){
     this->close();
 }
 
-void login::highscoresPage(User user){
-    highscoresWindow* highWindow = new highscoresWindow(user);
+void login::highscoresPage(int code, User user){
+    // if code is zero, thn log in as guest
+    highscoresWindow* highWindow = new highscoresWindow(app, code, user);
     highWindow->show();
     this->close();
 }

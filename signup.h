@@ -65,8 +65,8 @@ private slots:
     void upload_picture();
     void signup();
     void invalid(QLabel* label, int errorCode);
-    void validate_Username();
-    void validate_password();
+    bool validate_Username();    // returns false when invalid
+    bool validate_password();    // returns false when invalid
 };
 
 #endif // SIGNUP_H

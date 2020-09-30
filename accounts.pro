@@ -20,3 +20,6 @@ HEADERS += \
     signup.h \
     successwindow.h \
     user.h
+
+RESOURCES += \
+    ressources.qrc

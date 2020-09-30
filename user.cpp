@@ -121,11 +121,11 @@ void User::write(QJsonObject &json) const {
     json["firstName"] = firstName;
     json["lastName"] = lastName;
     QString date = "";
-    date.append(dateOfBirth.year());
+    date.append(QString::number(dateOfBirth.year() ));
     date.append("/");
-    date.append(dateOfBirth.month());
+    date.append(QString::number(dateOfBirth.month() ));
     date.append("/");
-    date.append(dateOfBirth.day());
+    date.append(QString::number(dateOfBirth.day()));
     date.append("/");
     json["dateOfBirth"] = date;
     json["gender"] = gender;
@@ -135,4 +135,16 @@ void User::write(QJsonObject &json) const {
         scoresArray.append(score);
     }
     json["scores"] = scoresArray;
+}
+
+
+QString User::getUserScores(){
+    QVector<int> userScores = getScores();
+    qSort(userScores);
+    QString scoresStr = "Scores: \n";
+    // we will only show the 10 highest scores of the user
+    for (int i = userScores.size()-1; i>=userScores.size()-10 and i>=0 ; i--){
+        scoresStr = scoresStr + QString::number(userScores[i]) + "\n";
+    }
+    return scoresStr;
 }

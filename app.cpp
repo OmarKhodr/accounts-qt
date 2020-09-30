@@ -4,6 +4,7 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QTextStream>
+#include<QtAlgorithms>
 
 App::App() { }
 
@@ -123,6 +124,26 @@ void App::write(QJsonObject &json) const {
     }
     json["users"] = usersArray;
 }
+
+QString App::getHighscore(){
+    QVector<User> userVector = getUsers();
+    int maxScore = 0;
+    QString userWithHighscore = "";
+    for (User user: userVector ){
+        QVector<int> scoresVector = user.getScores();
+        for(int score: scoresVector){
+            if (score>maxScore){
+                maxScore = score;
+                if(QString::compare(userWithHighscore, user.getUsername())!=0){
+                    userWithHighscore = user.getUsername();
+                }
+            }
+        }
+    }
+    QString returnstr = "Player " + userWithHighscore + " has the global highscore with " + QString::number(maxScore)+ "pts!";
+    return returnstr;
+}
+
 
 
 

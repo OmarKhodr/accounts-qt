@@ -22,6 +22,8 @@ public:
 
     void readFromJSON();
 
+    QString getHighscore();
+
 private:
     QVector<User> users;
 

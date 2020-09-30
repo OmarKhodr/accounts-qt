@@ -19,3 +19,11 @@ successWindow::successWindow(QWidget *parent) : QWidget(parent)
 void successWindow::setSuccessLabel(QString str){
     successMessage->setText(str);
 }
+
+void successWindow::setSuccessLabelPicture(QPixmap pic){
+    successMessage->setPixmap(pic);
+}
+
+void successWindow::changeSuccessLabel(QString str){
+    sucessLabel->setText(str);
+}

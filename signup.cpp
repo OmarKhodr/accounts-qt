@@ -7,39 +7,31 @@ signUp::signUp(QWidget *parent) : QWidget(parent)
 {
 
     sign_up = new QLabel("Sign Up");
-//    sign_up->setStyleSheet("font: 80px;");
+    sign_up->setStyleSheet("font: 25px;");
     sign_up->setAlignment(Qt::AlignCenter);
 
     first_name = new QLabel("First Name");
-//    first_name->setStyleSheet("font: 40px;");
 
     last_name = new QLabel("Last Name");
-//    last_name->setStyleSheet("font: 40px;");
 
     username = new QLabel("Username");
-//    username->setStyleSheet("font: 40px;");
 
     password = new QLabel("Password");
-//    password->setStyleSheet("font: 40px;");
 
     confirm_password = new QLabel("Confirm Password");
-//    confirm_password->setStyleSheet("font: 40px;");
 
     date_of_birth = new QLabel("Date Of Birth");
-//    date_of_birth->setStyleSheet("font: 40px");
 
     profile_pic = new QLabel("Profile Picture");
-//    profile_pic->setStyleSheet("font: 40px;");
 
     gender = new QLabel("Gender");
-//    gender->setStyleSheet("font: 40px;");
 
+    // label that will hold the picture, and its default form
     browse_pic = new QLabel();
-//    browse_pic->setFixedSize(300, 200);
+    browse_pic->setPixmap(QPixmap(":/images/User_icon.png").scaled(150, 150));
+
 
     date_birth_calendar = new QCalendarWidget();
-//    date_birth_calendar->setMaximumHeight(440);
-//    date_birth_calendar->setMinimumWidth(140);
 
     gender_male = new QRadioButton("Male");
     gender_female = new QRadioButton("Female");
@@ -51,32 +43,20 @@ signUp::signUp(QWidget *parent) : QWidget(parent)
     buttons_vertical_layout->addWidget(gender_other);
     gender_radio_buttons_box = new QGroupBox();
     gender_radio_buttons_box->setLayout(buttons_vertical_layout);
-//    gender_radio_buttons_box->setStyleSheet("Font: 20px;");
 
     firstName_edit = new QLineEdit();
-//    firstName_edit->setStyleSheet("font: 40px;");
     lastName_edit = new QLineEdit();
-//    lastName_edit->setStyleSheet("font: 40px;");
     username_edit = new QLineEdit();
-//    username_edit->setStyleSheet("font: 40px;");
     password_edit = new QLineEdit();
-//    password_edit->setStyleSheet("font: 40px;");
     password_edit->setEchoMode(QLineEdit::Password);
     confirm_edit = new QLineEdit();
-//    confirm_edit->setStyleSheet("font: 40px;");
     confirm_edit->setEchoMode(QLineEdit::Password);
 
 
     back_to_login = new QPushButton("Back to Log In");
-//    back_to_login->setStyleSheet("font: 30px;"
-//                                 "height: 40px;");
     submit_btn = new QPushButton("Submit");
-//    submit_btn->setStyleSheet("font: 30px;"
-//                              "height: 40px;");
 
     browse_button = new QPushButton("Browse For Picture");
-//    browse_button->setStyleSheet("font: 20px;"
-//                                 "height: 30px;");
 
     picture_vertical_layout = new QVBoxLayout();
     picture_vertical_layout->addWidget(browse_pic);
@@ -129,31 +109,45 @@ signUp::signUp(QWidget *parent) : QWidget(parent)
     QObject::connect(submit_btn, SIGNAL(clicked(bool)), this, SLOT(signup()));
     // check if username already exists
     QObject::connect(username_edit, SIGNAL(editingFinished()), this, SLOT(validate_Username()));
-    // check if both passwords are equal
-    QObject::connect(confirm_edit, SIGNAL(editingFinished()), this, SLOT(check_Both_Passwords()));
+
     // check if password has requirements
     QObject::connect(password_edit, SIGNAL(editingFinished()), this, SLOT(validate_password()));
 
 }
 
-void signUp::validate_Username(){
+bool signUp::validate_Username(){
     // check if username already taken
     bool taken = false;
+    bool hasSpace = false;
+    QString usernameStr = username_edit->text();
     QVector<User> users = app.getUsers();
     for (User user: users ){
         QString userName = user.getUsername();
-        if(QString::compare(userName, username_edit->text())==0 ){
+        if(QString::compare(userName, usernameStr)==0 ){
             taken = true;
+            break;
         }
     }
     if(taken == true ){
         signUp::invalid(username, 1);
+        return false;
+    }
+    for(int i =0 ; i<usernameStr.size(); i++){
+        if (usernameStr[i] == ' '){
+            hasSpace = true;
+            break;
+        }
+    }
+    if(hasSpace==true){
+        signUp::invalid(username, 2);
+        return false;
     }
 
+    return true;
 }
 
 
-void signUp::validate_password(){
+bool signUp::validate_password(){
     bool valid_size = true;
     bool valid_numbers = false;
     bool valid_upper = false;
@@ -180,7 +174,10 @@ void signUp::validate_password(){
 
     if ( (!valid_size) or (!valid_lower) or (!valid_upper) or (!valid_numbers) ){
         invalid(password, 2);
+        return false;
     }
+
+    return true;
 
 }
 
@@ -221,8 +218,10 @@ void signUp::invalid(QLabel* label, int errorCode) {
     if (label->text()=="Username"){
         if(errorCode==1){
             errW->setErrorLabel("Username already taken!");
-        }else{
+        }else if (errorCode==0){
             errW->setErrorLabel("Username field is empty!");
+        } else if (errorCode==2){
+            errW->setErrorLabel("Username should not contain a space!");
         }
         username_edit->setStyleSheet("border: 1px solid red;");
     } else if(label->text()=="First Name"){
@@ -272,6 +271,10 @@ void signUp::signup() {
         return;
     } else if (!gender_male->isChecked() && !gender_female->isChecked() && !gender_other->isChecked()) {
         invalid(gender, 0);
+        return;
+    } else if (!validate_Username()){
+        return;
+    } else if (!validate_password()){
         return;
     }
     user.setUsername(username_edit->text());
