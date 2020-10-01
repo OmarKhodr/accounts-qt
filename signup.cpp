@@ -85,6 +85,8 @@ signUp::signUp(QWidget *parent) : QWidget(parent)
     grid_layout->addWidget(picture_box, 8, 1);
     grid_layout->addWidget(submit_btn, 9, 0, 9, 2);
 
+    grid_layout->setVerticalSpacing(2);
+
 
 
     // vertical layout

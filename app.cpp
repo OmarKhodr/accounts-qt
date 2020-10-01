@@ -15,6 +15,7 @@ void App::readFromJSON(){
 
         if (!loadFile.open(QIODevice::ReadOnly)) {
                 qWarning("Couldn't open save file.");
+                return;
          }
 
         QByteArray saveData = loadFile.readAll();
@@ -125,23 +126,26 @@ void App::write(QJsonObject &json) const {
     json["users"] = usersArray;
 }
 
-QString App::getHighscore(){
+QString App::getHighscore(QString currUsername){
     QVector<User> userVector = getUsers();
     int maxScore = 0;
     QString userWithHighscore = "";
-    for (User user: userVector ){
+    for (User user: userVector) {
         QVector<int> scoresVector = user.getScores();
         for(int score: scoresVector){
             if (score>maxScore){
                 maxScore = score;
-                if(QString::compare(userWithHighscore, user.getUsername())!=0){
-                    userWithHighscore = user.getUsername();
-                }
+                userWithHighscore = user.getUsername();
             }
         }
     }
-    QString returnstr = "Player " + userWithHighscore + " has the global highscore with " + QString::number(maxScore)+ "pts!";
-    return returnstr;
+    QString ret;
+    if (currUsername == userWithHighscore) {
+        ret = "Congratulations! You have the global highscore with " + QString::number(maxScore)+ " points!";
+    } else {
+        ret = "Player " + userWithHighscore + " has the global highscore with " + QString::number(maxScore)+ " points. Keep trying!";
+    }
+    return ret;
 }
 
 

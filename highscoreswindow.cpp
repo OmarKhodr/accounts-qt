@@ -13,12 +13,12 @@ highscoresWindow::highscoresWindow(App app, int code, User user, QWidget *parent
 
     welcomeLabel = new QLabel();
     usernameLabel = new QLabel();
-    usernameLabel->setStyleSheet("font: 45px;");
+    usernameLabel->setStyleSheet("font: 30px;");
     usernameLabel->setAlignment(Qt::AlignCenter);
 
     // these widgets will be on the right
 
-    globalHighscorePlayerLabel = new QLabel(app.getHighscore());
+    globalHighscorePlayerLabel = new QLabel(app.getHighscore(user.getUsername()));
     globalHighscorePlayerLabel->setAlignment(Qt::AlignCenter);
     userScoresLabel = new QLabel();
     userScoresLabel->setAlignment(Qt::AlignCenter);
@@ -47,8 +47,8 @@ highscoresWindow::highscoresWindow(App app, int code, User user, QWidget *parent
     verticalLayoutLeft->addWidget(welcomeLabel);
 
     // widgets that will be on the right
-    highscoreLabel = new QLabel("HIGHSCORE");
-    highscoreLabel->setStyleSheet("font: 30px;");
+    highscoreLabel = new QLabel("RANKING");
+    highscoreLabel->setStyleSheet("font: 20px;");
     highscoreLabel->setAlignment(Qt::AlignCenter);
 
 
@@ -90,7 +90,7 @@ void highscoresWindow::playAsGuest(){
     profilePicLabel->setPixmap(QPixmap(":/images/User_icon.png").scaled(200, 200));
     usernameLabel->setText("Guest");
     welcomeLabel->setText("We welcome you as a guest! Hope you enjoy!");
-    userScoresLabel->setText("Scores: \n When you play as Guest no scores are saved!");
+    userScoresLabel->setText("Scores: \n Sign up to play and see your scores!");
 
 }
 
@@ -102,7 +102,7 @@ void highscoresWindow::playAsUser(User user){
 
     QPixmap profilePic = user.getProfilePicture();
 
-    welcomeLabel->setText( "Welcome back " + firstName +" "+ lastName + "!");
+    welcomeLabel->setText( "Welcome back, " + firstName +" "+ lastName + "!");
     usernameLabel->setText(username);
     profilePicLabel->setPixmap(profilePic);
     userScoresLabel->setText(user.getUserScores());

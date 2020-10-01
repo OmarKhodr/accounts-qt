@@ -144,7 +144,7 @@ QString User::getUserScores(){
     QString scoresStr = "Scores: \n";
     // we will only show the 10 highest scores of the user
     for (int i = userScores.size()-1; i>=userScores.size()-10 and i>=0 ; i--){
-        scoresStr = scoresStr + QString::number(userScores[i]) + "\n";
+        scoresStr = scoresStr + QString::number(userScores[i]) + "pts\n";
     }
     return scoresStr;
 }
