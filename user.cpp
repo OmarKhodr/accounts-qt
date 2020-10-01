@@ -148,3 +148,9 @@ QString User::getUserScores(){
     }
     return scoresStr;
 }
+
+int User::getHighscore(){
+    QVector<int> userScores = getScores();
+    qSort(userScores);
+    return userScores[userScores.size()-1];
+}

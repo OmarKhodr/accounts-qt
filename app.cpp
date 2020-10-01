@@ -139,9 +139,26 @@ QString App::getHighscore(QString currUsername){
             }
         }
     }
+    bool tie = false;
+    int usersWithHighscore = 0;
+    for (User user: userVector) {
+        QVector<int> scoresVector = user.getScores();
+        for(int score: scoresVector){
+            if (score==maxScore){
+                usersWithHighscore++;
+            }
+        }
+        if(usersWithHighscore>1){
+            tie = true;
+            break;
+        }
+    }
+    User u = getUser(currUsername);
     QString ret;
     if (currUsername == userWithHighscore) {
         ret = "Congratulations! You have the global highscore with " + QString::number(maxScore)+ " points!";
+    } else if (u.getHighscore()==maxScore and tie==true){
+        ret = "Congratulations! But be aware, you are tied with other player(s) with a highscore of "+ QString::number(maxScore)+ " points!";
     } else {
         ret = "Player " + userWithHighscore + " has the global highscore with " + QString::number(maxScore)+ " points. Keep trying!";
     }

@@ -51,6 +51,8 @@ public:
 
     QString getUserScores();
 
+    int getHighscore();
+
 private:
     QString username;
     QString password;
