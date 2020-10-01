@@ -79,6 +79,8 @@ QPixmap pixmapFrom(const QJsonValue &val) {
 }
 
 void User::read(const QJsonObject &json) {
+    //check the existence and valid type of every json key-value pair before reading into the
+    //corresponding member variable
     if (json.contains("username") && json["username"].isString()) {
         username = json["username"].toString();
     }
@@ -91,6 +93,7 @@ void User::read(const QJsonObject &json) {
     if (json.contains("lastName") && json["lastName"].isString()) {
         lastName = json["lastName"].toString();
     }
+    //JSON stores date in the form year/month/day, parse accordingly
     if (json.contains("dateOfBirth") && json["dateOfBirth"].isString()) {
         QString s = json["dateOfBirth"].toString();
         QStringList parts = s.split(QString("/"));
@@ -100,6 +103,7 @@ void User::read(const QJsonObject &json) {
     if (json.contains("gender") && json["gender"].isDouble()) {
         gender = Gender(json["gender"].toInt());
     }
+    //use conversion function to transform QByteArray to a QPixmap
     if (json.contains("profilePicture")) {
         QJsonValue val = json.value("profilePicture");
         profilePicture = pixmapFrom(val);

@@ -279,6 +279,7 @@ void signUp::signup() {
     } else if (!validate_password()){
         return;
     }
+    //in case all fields are valid, set user member variables accordingly
     user.setUsername(username_edit->text());
     user.setPassword(password_edit->text());
     user.setFirstName(firstName_edit->text());
@@ -292,16 +293,19 @@ void signUp::signup() {
     } else {
         user.setGender(User::Other);
     }
+    //set scores as 10 games with score 0...900
     QVector<int> scores;
     for (int i=0; i<10; i++) {
         scores.append(i*100);
     }
     user.setScores(scores);
+    //call app model to register user and save to JSON
     app.signup(user);
     // display success window
     successWindow* sW = new successWindow();
     sW->setSuccessLabel("User successfully created! You can now head back to Log In!");
     sW->show();
+    //after signing up successfully, empty all fields
     username_edit->setText("");
     password_edit->setText("");
     confirm_edit->setText("");

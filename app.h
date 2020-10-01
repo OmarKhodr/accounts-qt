@@ -20,6 +20,7 @@ public:
     QVector<User> getUsers() const;
     void setUsers(const QVector<User> &ausers);
 
+    //opens JSON file and calls read()
     void readFromJSON();
 
     QString getHighscore(QString currUsername);

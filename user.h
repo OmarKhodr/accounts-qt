@@ -22,6 +22,8 @@ public:
 
     User();
 
+    //getters and setters
+
     QString getUsername() const;
     void setUsername(const QString &ausername);
 
@@ -46,7 +48,9 @@ public:
     QVector<int> getScores() const;
     void setScores(const QVector<int> &ascores);
 
+    //reads JSON user contents into the User instance
     void read(const QJsonObject &json);
+    //writes member vars of user to the JSON object
     void write(QJsonObject &json) const;
 
     QString getUserScores();

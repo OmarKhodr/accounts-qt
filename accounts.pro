@@ -6,7 +6,6 @@ SOURCES += \
     highscoreswindow.cpp \
     login.cpp \
     main.cpp \
-    profile.cpp \
     signup.cpp \
     successwindow.cpp \
     user.cpp
@@ -16,7 +15,6 @@ HEADERS += \
     errorwindows.h \
     highscoreswindow.h \
     login.h \
-    profile.h \
     signup.h \
     successwindow.h \
     user.h

@@ -9,6 +9,7 @@
 App::App() { }
 
 void App::readFromJSON(){
+    //if users array is empty (i.e. potentially not read from yet), read
     if (users.size() == 0) {
 
         QFile loadFile(QStringLiteral("save.json"));
@@ -22,6 +23,7 @@ void App::readFromJSON(){
 
         QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
 
+        //get the root JSON object from the document then call read() on it
         read(loadDoc.object());
     }
 
@@ -35,6 +37,8 @@ void App::setUsers(const QVector<User> &ausers) {
     users = ausers;
 }
 
+//returns a boolean indicating if login was successful or not because of invalid credentials
+//or because the JSON file couldn't be loaded to be read from
 bool App::login(const QString &username, const QString &password) {
     if (users.size() == 0) {
         QFile loadFile(QStringLiteral("save.json"));
@@ -61,7 +65,8 @@ bool App::login(const QString &username, const QString &password) {
     return false;
 }
 
-
+//returns a boolean indicating whether file was successfully open
+//and written to
 bool App::signup(const User &user) {
     if (users.size() == 0) {
         QFile loadFile("save.json");
